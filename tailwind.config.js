@@ -6,13 +6,18 @@ export default {
   ],
   theme: {
     colors: {
-      main: "#E89F41",
+      main: "#ffa22b",
       second: "#F77D6B",
-      third: "#9C75F3",
+      third: "#864fff",
       white: "#fff",
       black: "#000"
     },
-    extend: {},
+    extend: {
+      fontFamily: {
+        main: "'Poppins', sans-serif",
+        second: "'Handlee', cursive",
+      }
+    },
   },
   plugins: [],
 }
