@@ -8,3 +8,20 @@
 * {
   font-family: 'Poppins', sans-serif;
 }
+
+.primary-button {
+  background-image: linear-gradient(to right, #F77D6B, #864fff);
+  border-radius: 30px;
+  padding: 12px 24px;
+  color: white;
+  transition: all .7s;
+  font-family: 'poppins';
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.primary-button:hover {
+  background-image: linear-gradient(to bottom right, #864fff, #F77D6B);
+  scale: 1.1;
+  box-shadow: 0 0 70px #bdbdbd;
+}

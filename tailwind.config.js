@@ -10,7 +10,8 @@ export default {
       second: "#F77D6B",
       third: "#864fff",
       white: "#fff",
-      black: "#000"
+      black: "#000",
+      lightblack: "#797979"
     },
     extend: {
       fontFamily: {
