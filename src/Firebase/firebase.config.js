@@ -5,12 +5,12 @@ import { initializeApp } from "firebase/app";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyCdvfDwohdBt1aTYPn_q_uFUhG7e0ib7vs",
-    authDomain: "task-magnet-hub.firebaseapp.com",
-    projectId: "task-magnet-hub",
-    storageBucket: "task-magnet-hub.appspot.com",
-    messagingSenderId: "882983296817",
-    appId: "1:882983296817:web:f7213b99d775ec50ccda10"
+    apiKey: import.meta.env.VITE_apiKey,
+    authDomain: import.meta.env.VITE_authDomain,
+    projectId: import.meta.env.VITE_projectId,
+    storageBucket: import.meta.env.VITE_storageBucket,
+    messagingSenderId: import.meta.env.VITE_messagingSenderId,
+    appId: import.meta.env.VITE_appId
 };
 
 // Initialize Firebase

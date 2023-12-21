@@ -4,6 +4,10 @@ import { useForm } from "react-hook-form"
 import { FaUpload } from "react-icons/fa";
 import useAxiosPublic from "../../Hooks/useAxiosPublic/useAxiosPublic";
 import useAuthProvider from "../../Hooks/useAuthProvider/useAuthProvider";
+import { ToastContainer, toast, Zoom } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs";
+import { useLocation, useNavigate } from "react-router-dom";
 
 //images
 const registerImg = "https://i.ibb.co/txRYXn7/sign-Upimg.png";
@@ -21,9 +25,12 @@ const Register = () => {
     const axiosPublic = useAxiosPublic();
     const [selectedImageName, setSelectedImageName] = useState('');
     const [selectedImage, setSelectedImage] = useState(null)
-    const authInfo = useAuthProvider();
+    const { createNewUser, updateProfileInfo } = useAuthProvider();
+    const [showPassword, setShowPassword] = useState(false);
+    const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+    const navigate = useNavigate();
+    const location = useLocation();
 
-    console.log(authInfo);
 
     // react hook form
     const {
@@ -56,19 +63,113 @@ const Register = () => {
 
     // handle form onsubmit
     const onSubmit = data => {
-        const user = data.name;
-        const userEmail = data.email;
-        const userType = data.userType;
-        const password = data.password;
-        const registeredDate = todayDate;
 
-        console.log(password);
+        // if a selectedimage is available upload it to the hosting
+        if (selectedImage) {
+            axiosPublic.post(imgUploadUrl, selectedImage, {
+                headers: {
+                    'content-type': 'multipart/form-data'
+                }
+            })
+                .then(res => {
+                    if (res.data) {
+                        const name = data.name;
+                        const email = data.email;
+                        const userType = data.userType;
+                        const password = data.password;
+                        const registeredDate = todayDate;
+                        const photo = res.data.data.display_url;
 
-        const newUserInfo = { user, userEmail, userType, registeredDate };
+                        // form data in an object
+                        const newUserInfo = { name, email, photo, userType, registeredDate };
 
-        console.log(newUserInfo)
+
+                        // regular expression for password
+                        const regExPattern = /^(?=.*[A-Z])(?=.*[\W_]).{6,}$/;
+                        setPasswordErrorMessage();
+
+
+                        // password vaidation
+                        if (!regExPattern.test(password)) {
+                            setPasswordErrorMessage("Password should be minimum 6 characters, contain at least 1 capital letter & 1 special character");
+                            return;
+                        }
+
+                        // call crete new user function
+                        createNewUser(email, password)
+                            .then(result => {
+                                // if new user is created send the data to database
+                                if (result.user) {
+                                    const currentUsersInfo = result.user;
+                                    // post the new user data to database
+                                    axiosPublic.post("/newuser", newUserInfo)
+                                        .then(res => {
+                                            const data = res.data;
+                                            if (data.insertedId) {
+                                                successNotify();
+                                                updateProfileInfo(currentUsersInfo, name, photo)
+                                                reset();
+                                                navigate(location?.state ? location.state : "/")
+                                            }
+                                        })
+                                        // database post error
+                                        .catch(err => {
+                                            const error = err.code + "-" + err.message;
+                                            failedNotify(error);
+                                        })
+                                }
+                            })
+                            // firebase account creation error
+                            .catch(error => {
+                                failedNotify(error.code + "-" + error.message);
+                            });
+                    }
+                })
+                // image upload to img host error
+                .catch(err => {
+                    failedNotify(err.code + "|" + err.message)
+                })
+        }
+
 
     }
+
+
+
+    // show-hide password functionality
+    const handleShowPassword = () => {
+        setShowPassword(!showPassword)
+    };
+
+
+
+
+
+    // success notify
+    const successNotify = () => toast.success('Account creation successfull', {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: "colored",
+        transition: Zoom,
+    });
+
+    // failed notify
+    const failedNotify = (errorMessage) => toast.error(`${errorMessage}`, {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: "colored",
+        transition: Zoom,
+    });
 
 
 
@@ -135,19 +236,28 @@ const Register = () => {
                                 id="image"
                                 accept="image/*"
                                 onChange={handleImageInput}
+                                required
                                 className="cursor-pointer opacity-0 absolute top-0 left-0 w-full" />
                         </label>
 
 
                         {/* passowrd input */}
                         <div className="w-full flex justify-center items-center lg:justify-start">
-                            <input type="password" className="w-full md:w-2/3 bg-[#ffffff00] border-lightwhite border-[1px] px-5 py-3 rounded-[5px] focus:outline-none focus:border-third font-body text-black focus:bg-white"
-                                placeholder="Choose a passowrd" {...register("password", { required: true })} />
+                            <div className="w-full md:w-2/3 relative">
+                                <input type={showPassword ? "text" : "password"} className="w-full bg-[#ffffff00] border-lightwhite border-[1px] px-5 py-3 rounded-[5px] focus:outline-none focus:border-third font-body text-black focus:bg-white relative"
+                                    placeholder="Choose a passowrd" {...register("password", { required: true })} />
+                                <span onClick={handleShowPassword} className="absolute right-4 top-4 text-lightblack"> {showPassword ? <BsFillEyeSlashFill /> : <BsFillEyeFill />} </span>
+                            </div>
+                            {
+                                passwordErrorMessage ? <p className="text-[14px] font-regular text-[#c73c3c]">{passwordErrorMessage}</p> : ''
+                            }
                             {errors.password && <span className="font-main text-[14px] text-[#a12121] font-medium">This field is required</span>}
                         </div>
 
                         {/* submit button */}
                         <input type="submit" value="Register" className="primary-button cursor-pointer" />
+
+                        <ToastContainer closeButton={false} />
 
                     </form>
                 </div>
