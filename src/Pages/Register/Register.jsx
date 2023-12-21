@@ -7,7 +7,7 @@ import useAuthProvider from "../../Hooks/useAuthProvider/useAuthProvider";
 import { ToastContainer, toast, Zoom } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 //images
 const registerImg = "https://i.ibb.co/txRYXn7/sign-Upimg.png";
@@ -109,19 +109,19 @@ const Register = () => {
                                                 successNotify();
                                                 updateProfileInfo(currentUsersInfo, name, photo)
                                                 reset();
-                                                navigate(location?.state ? location.state : "/")
+                                                navigate(location?.state ? location?.state : "/")
                                             }
                                         })
                                         // database post error
                                         .catch(err => {
-                                            const error = err.code + "-" + err.message;
+                                            const error = "Database:" + err.code + "-" + err.message;
                                             failedNotify(error);
                                         })
                                 }
                             })
                             // firebase account creation error
                             .catch(error => {
-                                failedNotify(error.code + "-" + error.message);
+                                failedNotify("Firebase:" + error.code + "-" + error.message);
                             });
                     }
                 })
@@ -190,27 +190,27 @@ const Register = () => {
                 </div>
 
                 {/* register right section (form section) */}
-                <div className="w-full lg:w-1/2 h-full flex justify-start items-center gap-5">
+                <div className="w-full lg:w-1/2 h-full flex flex-col justify-start items-center gap-5">
 
                     {/* registration form */}
                     <form onSubmit={handleSubmit(onSubmit)} className="w-full h-auto flex flex-col justify-center items-center lg:items-start gap-5">
 
                         {/* name input */}
-                        <div className="w-full flex justify-center items-center lg:justify-start">
+                        <div className="w-full flex flex-col justify-center items-start md:items-center lg:items-start">
                             <input type="text" className="w-full md:w-2/3 bg-[#ffffff00] border-lightwhite border-[1px] px-5 py-3 rounded-[5px] focus:outline-none focus:border-third font-body text-black focus:bg-white"
                                 placeholder="Your name" {...register("name", { required: true })} />
                             {errors.name && <span className="font-main text-[14px] text-[#a12121] font-medium">This field is required</span>}
                         </div>
 
                         {/* email input */}
-                        <div className="w-full flex justify-center items-center lg:justify-start">
+                        <div className="w-full flex flex-col justify-center items-start md:items-center lg:items-start">
                             <input type="email" className="w-full md:w-2/3 bg-[#ffffff00] border-lightwhite border-[1px] px-5 py-3 rounded-[5px] focus:outline-none focus:border-third font-body text-black focus:bg-white"
                                 placeholder="Your email" {...register("email", { required: true })} />
                             {errors.email && <span className="font-main text-[14px] text-[#a12121] font-medium">This field is required</span>}
                         </div>
 
                         {/* userType input */}
-                        <div className="w-full flex justify-center items-center lg:justify-start">
+                        <div className="w-full flex flex-col justify-center items-start md:items-center lg:items-start">
                             <select className="w-full md:w-2/3 bg-[#ffffff00] border-lightwhite border-[1px] px-5 py-3 rounded-[5px] focus:outline-none focus:border-third font-body text-lightblack focus:bg-white"
                                 defaultValue="Select your profession"
                                 {...register("userType", { required: true })}>
@@ -260,6 +260,8 @@ const Register = () => {
                         <ToastContainer closeButton={false} />
 
                     </form>
+
+                    <p className="text-center lg:text-left w-full font-medium text-lightblack">Already have an account? <span className="font-semibold text-third hover:text-second duration-500 text-[18px]"><Link to="/login">Login here</Link></span> </p>
                 </div>
             </div>
 
