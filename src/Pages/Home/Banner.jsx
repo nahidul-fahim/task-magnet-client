@@ -82,7 +82,7 @@ const Banner = () => {
             </div>
 
             {/* features section */}
-            <div className='py-[80px] p-5 flex flex-col justify-center items-center gap-10'>
+            <div className='py-[80px] p-5 flex flex-col justify-center items-center gap-10 container mx-auto'>
                 <SectionTile
                     smallTitle="Features"
                     bigTitle="Task Maestry"
