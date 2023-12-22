@@ -4,6 +4,8 @@ import ErrorPage from "../../Components/ErrorPage/ErrorPage";
 import Home from "../../Pages/Home/Home";
 import Register from "../../Pages/Register/Register";
 import Login from "../../Pages/Login/Login";
+import Dashboard from "../../Layout/Dashboard/Dashboard";
+import Alltasks from "../../Pages/DashboardPages/AllTasks/Alltasks";
 
 
 
@@ -26,6 +28,17 @@ const router = createBrowserRouter([
     {
         path: "/login",
         element: <Login />
+    },
+    // dashboard routes
+    {
+        path: "dashboard",
+        element: <Dashboard />,
+        children: [
+            {
+                path: "alltasks",
+                element: <Alltasks />
+            }
+        ]
     }
 ]);
 

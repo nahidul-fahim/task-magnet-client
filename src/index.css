@@ -28,7 +28,7 @@
 
 
 .link-style {
-  color: white;
+  color: #864fff;
   padding: 4px 16px;
   transition: all 0.5s;
   font-weight: 500;
@@ -37,17 +37,17 @@
 }
 
 .link-style:hover {
-  background-color: white;
-  color: #2c0b87;
+  background-color: #864fff;
+  color: white;
   border-radius: 3px;
 }
 
 .active-link-style {
-  font-weight: 500;
+  font-weight: 400;
   width: 100%;
   font-size: 14px;
   padding: 4px 16px;
-  background-color: white;
-  color: #2c0b87;
+  background-color:#864fff;
+  color: white;
   border-radius: 3px;
 }
