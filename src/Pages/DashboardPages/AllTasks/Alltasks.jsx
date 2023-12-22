@@ -28,7 +28,7 @@ const Alltasks = () => {
 
     // get task from custom hooks
     const { alltasksPending, allTasks, allTasksRefetch } = useUserTasks();
-    const { singleTaskPending, singleTask, singleTaskRefetch } = useSingleTask(updateTaskId)
+    const { singleTask, singleTaskRefetch } = useSingleTask(updateTaskId)
 
     // react hook form
     const {
@@ -129,7 +129,7 @@ const Alltasks = () => {
 
 
 
-        axiosPublic.put("/updatetask", updatedTaskInfo)
+        axiosPublic.put(`/updatetask/${updateTaskId}`, updatedTaskInfo)
             .then(res => {
                 const data = res.data;
                 console.log(data)
@@ -202,7 +202,7 @@ const Alltasks = () => {
 
 
     return (
-        <div className="container mx-auto p-5 font-main flex flex-col justify-start items-start lg:min-h-[100vh] py-10">
+        <div className="container mx-auto font-main flex flex-col justify-start items-start lg:min-h-[100vh] py-10">
 
             <ToastContainer closeButton={false} className="z-[99]" />
 
@@ -299,7 +299,7 @@ const Alltasks = () => {
                     {
                         toDoTasks.map((singleTask, index) =>
                             <div key={index}
-                                className="bg-white py-4 px-3 rounded flex flex-col justify-start items-start gap-4">
+                                className="bg-white py-4 px-3 rounded flex flex-col justify-start items-start gap-4 min-w-full">
 
                                 <div className="w-full flex justify-between items-center gap-5">
                                     <p className={`capitalize ${singleTask?.taskPriority === "urgent" ? "urgent-priority" : singleTask?.taskPriority === "important" ? "important-priority" : "normal-priority"}`}>{singleTask?.taskPriority}</p>
@@ -327,7 +327,7 @@ const Alltasks = () => {
                     {
                         inProgressTasks.map((singleTask, index) =>
                             <div key={index}
-                                className="bg-white py-4 px-3 rounded flex flex-col justify-start items-start gap-4">
+                                className="bg-white py-4 px-3 rounded flex flex-col justify-start items-start gap-4 min-w-full">
 
                                 <div className="w-full flex justify-between items-center gap-5">
                                     <p className={`capitalize ${singleTask?.taskPriority === "urgent" ? "urgent-priority" : singleTask?.taskPriority === "important" ? "important-priority" : "normal-priority"}`}>{singleTask?.taskPriority}</p>
@@ -355,7 +355,7 @@ const Alltasks = () => {
                     {
                         completedTasks.map((singleTask, index) =>
                             <div key={index}
-                                className="bg-white py-4 px-3 rounded flex flex-col justify-start items-start gap-4">
+                                className="bg-white py-4 px-3 rounded flex flex-col justify-start items-start gap-4 min-w-full">
 
                                 <div className="w-full flex justify-between items-center gap-5">
                                     <p className={`capitalize ${singleTask?.taskPriority === "urgent" ? "urgent-priority" : singleTask?.taskPriority === "important" ? "important-priority" : "normal-priority"}`}>{singleTask?.taskPriority}</p>

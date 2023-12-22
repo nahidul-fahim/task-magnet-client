@@ -64,7 +64,7 @@ const Dashboard = () => {
                 {/* drawer sidebar */}
                 <div className="drawer-side p-3">
                     <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label>
-                    <div className="menu p-4 w-[250px] min-h-full bg-[#e5e3eb] text-white font-medium flex flex-col justify-start items-start gap-5 rounded-none lg:rounded-[5px]">
+                    <div className="menu p-4 w-[235px] min-h-full bg-[#e5e3eb] text-white font-medium flex flex-col justify-start items-start gap-5 rounded-none lg:rounded-[5px]">
 
                         {/* website logo */}
                         <Link to="/" className="w-full flex justify-center items-center">

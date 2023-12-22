@@ -6,6 +6,7 @@ import Register from "../../Pages/Register/Register";
 import Login from "../../Pages/Login/Login";
 import Dashboard from "../../Layout/Dashboard/Dashboard";
 import Alltasks from "../../Pages/DashboardPages/AllTasks/Alltasks";
+import PrivateRouter from "../PrivateRouter/PrivateRouter";
 
 
 
@@ -32,7 +33,7 @@ const router = createBrowserRouter([
     // dashboard routes
     {
         path: "dashboard",
-        element: <Dashboard />,
+        element: <PrivateRouter><Dashboard /></PrivateRouter>,
         children: [
             {
                 path: "alltasks",

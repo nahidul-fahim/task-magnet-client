@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { TypeAnimation } from 'react-type-animation';
 import SectionTile from '../../Shared/SectionTitle/SectionTile';
+import { Link } from 'react-router-dom';
 
 
 
@@ -64,7 +65,7 @@ const Banner = () => {
                                 deletionSpeed={150}
                             />
                         </div>
-                        <button className='primary-button mt-5'>{'Let\'s'} Explore</button>
+                        <Link to="/dashboard"><button className='primary-button mt-5'>{'Let\'s'} Explore</button></Link>
                     </div>
                 </div>
 
