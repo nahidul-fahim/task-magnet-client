@@ -12,7 +12,7 @@
 .primary-button {
   background-image: linear-gradient(to right, #F77D6B, #864fff);
   border-radius: 30px;
-  padding: 10px 24px;
+  padding: 8px 24px;
   color: white;
   transition: all .7s;
   font-family: 'poppins';
@@ -47,7 +47,31 @@
   width: 100%;
   font-size: 14px;
   padding: 4px 16px;
-  background-color:#864fff;
+  background-color: #864fff;
   color: white;
   border-radius: 3px;
+}
+
+.urgent-priority {
+  background-color: #ff6048;
+  color: white;
+  padding: 2px 5px;
+  border-radius: 2px;
+  font-size: 10px;
+}
+
+.important-priority {
+  background-color: #6c549e;
+  color: white;
+  padding: 2px 5px;
+  border-radius: 2px;
+  font-size: 10px;
+}
+
+.normal-priority {
+  background-color: #797979;
+  color: white;
+  padding: 2px 5px;
+  border-radius: 2px;
+  font-size: 10px;
 }

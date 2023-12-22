@@ -1,9 +1,10 @@
 import { FaBars } from "react-icons/fa";
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { MdHome } from "react-icons/md";
 import { BiLogOut } from "react-icons/bi";
 import useAuthProvider from "../../Hooks/useAuthProvider/useAuthProvider";
 import useCurrentUser from "../../Hooks/useCurrentUser/useCurrentUser";
+import { useEffect } from "react";
 
 
 // website logo
@@ -14,8 +15,15 @@ const Dashboard = () => {
 
 
     // hooks and custom hooks
-    const { logOut } = useAuthProvider();
+    const { logOut, currentUser, loading } = useAuthProvider();
     const { currentUserDBPending, currentUserDB } = useCurrentUser();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (currentUser) {
+            navigate("/dashboard/alltasks")
+        }
+    }, [currentUser, loading, navigate])
 
 
 
