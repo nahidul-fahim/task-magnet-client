@@ -15,7 +15,6 @@ import useSingleTask from "../../../Hooks/useSingleTask/useSingleTask";
 
 const Alltasks = () => {
 
-
     // hooks
     const axiosPublic = useAxiosPublic();
     const { loading, currentUser } = useAuthProvider();
@@ -49,9 +48,7 @@ const Alltasks = () => {
             const completedTasks = allTasks.filter(singleTask => singleTask.taskStatus === "completed")
             setCompletedTasks(completedTasks);
         }
-
     }, [allTasks, alltasksPending])
-
 
 
 
@@ -59,9 +56,6 @@ const Alltasks = () => {
     if (loading || alltasksPending) {
         return <LoadingAnimation />
     }
-
-
-
 
 
     // get todays date
@@ -127,8 +121,7 @@ const Alltasks = () => {
 
         const updatedTaskInfo = { title, description, taskPriority, taskDeadlineDate, taskUpdatingDate }
 
-
-
+        // send updated data to the database
         axiosPublic.put(`/updatetask/${updateTaskId}`, updatedTaskInfo)
             .then(res => {
                 const data = res.data;
@@ -298,8 +291,9 @@ const Alltasks = () => {
                     <h3 className="font-semibold text-lightblack text-xl">To-do</h3>
                     {
                         toDoTasks.map((singleTask, index) =>
-                            <div key={index}
-                                className="bg-white py-4 px-3 rounded flex flex-col justify-start items-start gap-4 min-w-full">
+                            <div
+                            key={index}
+                                className="bg-white py-4 px-3 rounded flex flex-col justify-start items-start gap-4 min-w-full z-[99]">
 
                                 <div className="w-full flex justify-between items-center gap-5">
                                     <p className={`capitalize ${singleTask?.taskPriority === "urgent" ? "urgent-priority" : singleTask?.taskPriority === "important" ? "important-priority" : "normal-priority"}`}>{singleTask?.taskPriority}</p>
@@ -456,10 +450,6 @@ const Alltasks = () => {
 
                 </div>
             </dialog>
-
-
-
-
         </div>
     );
 };

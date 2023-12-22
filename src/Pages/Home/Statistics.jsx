@@ -4,7 +4,7 @@ import CountUp from 'react-countup';
 
 const Statistics = () => {
     return (
-        <div className="container mx-auto p-5 py-[70px] lg:py-[120px] font-main">
+        <div id="statistics" className="container mx-auto p-5 py-[70px] lg:py-[120px] font-main">
 
             <SectionTile
                 smallTitle="Statistics"

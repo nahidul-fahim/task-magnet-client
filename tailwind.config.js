@@ -7,8 +7,8 @@ export default {
   theme: {
     colors: {
       main: "#ffa22b",
-      second: "#F77D6B",
-      third: "#864fff",
+      second: "#cc295f",
+      third: "#7130ff",
       white: "#fff",
       black: "#000",
       lightblack: "#797979",

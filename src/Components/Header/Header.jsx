@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import useAuthProvider from "../../Hooks/useAuthProvider/useAuthProvider";
 import useCurrentUser from "../../Hooks/useCurrentUser/useCurrentUser";
 import LoadingAnimation from "../../Shared/LoadingAnimation/LoadinAnimation";
@@ -35,8 +35,10 @@ const Header = () => {
 
     // navigation bar links
     const links = <>
-        <NavLink to="/" className="hover:text-sub duration-200">Home</NavLink>
-        <NavLink to="/myCart" className="hover:text-sub duration-200">My Cart</NavLink>
+        <a href="#home" className="hover:text-main duration-200 font-medium">Home</a>
+        <a href="#features" className="hover:text-main duration-200 font-medium">Features</a>
+        <a href="#statistics" className="hover:text-main duration-200 font-medium">Statistics</a>
+        <a href="#testimonial" className="hover:text-main duration-200 font-medium">Testimonial</a>
     </>
 
 

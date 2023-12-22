@@ -22,7 +22,7 @@ const Testimonials = () => {
 
 
     return (
-        <div className="p-5 py-[70px] lg:py-[120px] font-main"
+        <div id="testimonial" className="p-5 py-[70px] lg:py-[120px] font-main"
             style={{
                 backgroundImage: `url(${sectionBg})`,
                 backgroundPosition: "center",

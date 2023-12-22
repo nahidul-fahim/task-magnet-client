@@ -7,10 +7,11 @@
 
 * {
   font-family: 'Poppins', sans-serif;
+  scroll-behavior: smooth;
 }
 
 .primary-button {
-  background-image: linear-gradient(to right, #F77D6B, #864fff);
+  background-image: linear-gradient(to right, #cc295f, #7130ff);
   border-radius: 30px;
   padding: 8px 24px;
   color: white;
@@ -21,14 +22,14 @@
 }
 
 .primary-button:hover {
-  background-image: linear-gradient(to bottom right, #864fff, #F77D6B);
+  background-image: linear-gradient(to bottom right, #7130ff, #cc295f);
   scale: 1.1;
   box-shadow: 0 0 70px #bdbdbd;
 }
 
 
 .link-style {
-  color: #864fff;
+  color: #7130ff;
   padding: 4px 16px;
   transition: all 0.5s;
   font-weight: 500;
@@ -37,7 +38,7 @@
 }
 
 .link-style:hover {
-  background-color: #864fff;
+  background-color: #7130ff;
   color: white;
   border-radius: 3px;
 }
@@ -47,13 +48,13 @@
   width: 100%;
   font-size: 14px;
   padding: 4px 16px;
-  background-color: #864fff;
+  background-color: #7130ff;
   color: white;
   border-radius: 3px;
 }
 
 .urgent-priority {
-  background-color: #ff6048;
+  background-color: #cc295f;
   color: white;
   padding: 2px 5px;
   border-radius: 2px;
@@ -61,7 +62,7 @@
 }
 
 .important-priority {
-  background-color: #6c549e;
+  background-color: #502f97;
   color: white;
   padding: 2px 5px;
   border-radius: 2px;

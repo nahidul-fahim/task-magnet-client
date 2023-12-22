@@ -32,7 +32,7 @@ const Banner = () => {
             }} >
 
             {/* main div to contain left and right */}
-            <div className="container mx-auto p-5 lg:h-[100vh] flex flex-col lg:flex-row justify-center lg:justify-between items-center gap-10 w-full relative">
+            <div id='home' className="container mx-auto p-5 lg:h-[100vh] flex flex-col lg:flex-row justify-center lg:justify-between items-center gap-10 w-full relative">
 
                 {/* left container */}
                 <div className='w-full lg:w-1/2'>
@@ -83,7 +83,7 @@ const Banner = () => {
             </div>
 
             {/* features section */}
-            <div className='py-[80px] p-5 flex flex-col justify-center items-center gap-10 container mx-auto'>
+            <div id='features' className='py-[80px] p-5 flex flex-col justify-center items-center gap-10 container mx-auto'>
                 <SectionTile
                     smallTitle="Features"
                     bigTitle="Task Maestry"
