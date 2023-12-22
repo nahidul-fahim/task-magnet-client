@@ -82,7 +82,7 @@ const Login = () => {
                     const email = data?.email;
                     const photo = data?.photoURL;
                     const registeredDate = todayDate;
-                    const userType = "user";
+                    const userType = "other";
                     const newUserInfo = { name, email, photo, userType, registeredDate }
 
 
