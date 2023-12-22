@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import useAuthProvider from "../../Hooks/useAuthProvider/useAuthProvider";
 import useCurrentUser from "../../Hooks/useCurrentUser/useCurrentUser";
-import LoadingAnimation from "../../Shared/LoadingAnimation/LoadinAnimation";
+
 
 
 // images
@@ -11,13 +11,13 @@ const websiteLogo = "https://i.ibb.co/K9ndz8T/website-Logo.png";
 const Header = () => {
 
     // hooks
-    const { currentUserDBPending, currentUserDB } = useCurrentUser();
+    const { currentUserDB } = useCurrentUser();
     const { currentUser, logOut } = useAuthProvider();
 
 
-    if (currentUserDBPending) {
-        return <LoadingAnimation />
-    }
+    // if (currentUserDBPending) {
+    //     return <LoadingAnimation />
+    // }
 
 
 
