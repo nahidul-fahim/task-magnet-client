@@ -76,3 +76,40 @@
   border-radius: 2px;
   font-size: 10px;
 }
+
+.button-inprogress {
+  background-color: #4EA0FF;
+  color: white;
+  padding: 2px 5px;
+  border-radius: 2px;
+  font-size: 11px;
+}
+
+.button-complete {
+  background-color: #2B9618;
+  color: white;
+  padding: 2px 5px;
+  border-radius: 2px;
+  font-size: 11px;
+}
+
+.deadline-notification {
+  color: red;
+  font-size: 13px;
+  font-family: 'poppins';
+  font-weight: 500;
+  border: solid 1px rgb(247, 77, 77);
+  padding: 3px 5px;
+  border-radius: 4px;
+  animation: deadlineNotificationAnimation 1.5s ease-in-out 0s alternate infinite none running;
+}
+
+
+@keyframes deadlineNotificationAnimation {
+  from {
+    transform: scale(0.7);
+  }
+  to {
+    transform: scale(1);
+  }
+}

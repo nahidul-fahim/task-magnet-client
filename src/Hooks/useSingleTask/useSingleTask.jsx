@@ -7,7 +7,6 @@ const useSingleTask = (id) => {
     //hooks
     const axiosPublic = useAxiosPublic();
 
-
     const { isPending: singleTaskPending, data: singleTask, refetch: singleTaskRefetch } = useQuery({
         queryKey: ["all-tasks", id],
         queryFn: async () => {
@@ -15,8 +14,6 @@ const useSingleTask = (id) => {
             return res.data;
         }
     })
-
-
 
     return { singleTaskPending, singleTask, singleTaskRefetch };
 };

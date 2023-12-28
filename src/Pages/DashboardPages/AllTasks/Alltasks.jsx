@@ -6,7 +6,7 @@ import useAxiosPublic from "../../../Hooks/useAxiosPublic/useAxiosPublic";
 import useAuthProvider from "../../../Hooks/useAuthProvider/useAuthProvider";
 import LoadingAnimation from "../../../Shared/LoadingAnimation/LoadinAnimation";
 import useUserTasks from "../../../Hooks/useUserTasks/useUserTasks";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MdDelete, MdModeEditOutline } from "react-icons/md";
 import { GrClose } from "react-icons/gr";
 import useSingleTask from "../../../Hooks/useSingleTask/useSingleTask";
@@ -18,23 +18,25 @@ const Alltasks = () => {
     // hooks
     const axiosPublic = useAxiosPublic();
     const { loading, currentUser } = useAuthProvider();
+    const updatingForm = useRef(null);
 
     // get states
     const [toDoTasks, setToDoTasks] = useState('');
     const [inProgressTasks, setInProgressTasks] = useState('');
     const [completedTasks, setCompletedTasks] = useState('');
-    const [updateTaskId, seUpdateTaskId] = useState('');
+    const [updateTaskId, seUpdateTaskId] = useState(' ');
 
     // get task from custom hooks
     const { alltasksPending, allTasks, allTasksRefetch } = useUserTasks();
-    const { singleTask, singleTaskRefetch } = useSingleTask(updateTaskId)
+    const { singleTask, singleTaskRefetch } = useSingleTask(updateTaskId);
+
 
     // react hook form
     const {
         register,
         handleSubmit,
         formState: { errors },
-        reset
+        reset,
     } = useForm()
 
 
@@ -82,7 +84,6 @@ const Alltasks = () => {
                     allTasksRefetch();
                     reset();
                     successNotify("New task added")
-                    // close the modal after task is added successfully
                     const taskAddingModal = document.getElementById("taskAddingModal");
                     taskAddingModal.close();
                 }
@@ -96,7 +97,6 @@ const Alltasks = () => {
 
     // get data for the update and open modal
     const getUpdateData = id => {
-        console.log(id);
         seUpdateTaskId(id);
         const taskUpdatingModal = document.getElementById('taskUpdatingModal')
         taskUpdatingModal.showModal();
@@ -112,11 +112,13 @@ const Alltasks = () => {
 
 
     // send the update data to databse
-    const onUpdateSubmit = data => {
-        const title = data.title;
-        const description = data.description;
-        const taskPriority = data.taskPriority;
-        const taskDeadlineDate = data.deadline;
+    const handleTaskUpdate = e => {
+        e.preventDefault();
+        const form = e.target;
+        const title = form.title.value;
+        const description = form.description.value;
+        const taskPriority = form.taskPriority.value;
+        const taskDeadlineDate = form.taskDeadlineDate.value;
         const taskUpdatingDate = todayDate;
 
         const updatedTaskInfo = { title, description, taskPriority, taskDeadlineDate, taskUpdatingDate }
@@ -125,11 +127,10 @@ const Alltasks = () => {
         axiosPublic.put(`/updatetask/${updateTaskId}`, updatedTaskInfo)
             .then(res => {
                 const data = res.data;
-                console.log(data)
                 if (data.modifiedCount > 0) {
                     singleTaskRefetch();
                     allTasksRefetch();
-                    reset();
+                    updatingForm.current.reset();
                     successNotify("Task updated")
                     // close the modal after task is added successfully
                     const taskUpdatingModal = document.getElementById("taskUpdatingModal");
@@ -159,6 +160,25 @@ const Alltasks = () => {
 
 
 
+    // update task  status
+    const updateTaskStatus = (id, status) => {
+        const taskStatus = status;
+        const updatedStatus = { taskStatus };
+
+
+        // send updated data to the database
+        axiosPublic.put(`/updatetaskstatus/${id}`, updatedStatus)
+            .then(res => {
+                const data = res.data;
+                if (data.modifiedCount > 0) {
+                    singleTaskRefetch();
+                    allTasksRefetch();
+                }
+            })
+            .catch(err => {
+                failedNotify(err.code + "||" + err.message)
+            })
+    }
 
 
     // success notify
@@ -208,6 +228,132 @@ const Alltasks = () => {
                 ><FaRegSquarePlus className="text-xl" /> Add New Task</button>
 
             </div>
+
+
+            {/* tasks showing table */}
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-[50px]">
+
+
+                {/* to do tasks */}
+                <div className="flex flex-col justify-start items-start gap-7 bg-[#ebebeb] py-4 px-3 rounded-[5px]">
+                    <h3 className="font-semibold text-lightblack text-xl">To-do</h3>
+                    {
+                        toDoTasks.map((singleTask, index) =>
+                            <div
+                                key={index}
+                                className="bg-white py-4 px-3 rounded flex flex-col justify-start items-start gap-4 min-w-full z-[99]">
+
+                                <div className="w-full flex justify-between items-center gap-5">
+                                    <p className={`capitalize ${singleTask?.taskPriority === "urgent" ? "urgent-priority" : singleTask?.taskPriority === "important" ? "important-priority" : "normal-priority"}`}>{singleTask?.taskPriority}</p>
+
+                                    <div className="flex justify-end items-center gap-2 text-lightwhite">
+                                        <button onClick={() => getUpdateData(singleTask?._id)}><MdModeEditOutline /></button>
+                                        <button onClick={() => handleDelete(singleTask?._id)}><MdDelete /></button>
+                                    </div>
+                                </div>
+
+                                <h3 className="text-[16px] font-medium text-black">{singleTask?.title}</h3>
+
+                                <p className="text-[14px] text-lightblack">{singleTask?.description}</p>
+
+                                <p className="text-[14px] text-lightblack">Deadline: {singleTask?.taskDeadlineDate}</p>
+
+                                {
+                                    singleTask?.taskDeadlineDate === todayDate ? <p className="deadline-notification">You have a deadline today</p> : ""
+
+                                }
+
+                                <div className="w-full flex justify-start items-center gap-3">
+                                    <button className="button-inprogress"
+                                        onClick={() => updateTaskStatus(singleTask?._id, "inProgress")}
+                                    >
+                                        Mark In Progress
+                                    </button>
+
+                                    <button className="button-complete"
+                                        onClick={() => updateTaskStatus(singleTask?._id, "completed")}
+                                    >
+                                        Mark Complete
+                                    </button>
+                                </div>
+
+                            </div>
+                        )
+                    }
+                </div>
+
+                {/* in progress tasks */}
+                <div className="flex flex-col justify-start items-start gap-7 bg-[#d8efff] py-4 px-3 rounded-[5px]">
+                    <h3 className="font-semibold text-[#4ea0ff] text-xl">In progress</h3>
+                    {
+                        inProgressTasks.map((singleTask, index) =>
+                            <div key={index}
+                                className="bg-white py-4 px-3 rounded flex flex-col justify-start items-start gap-4 min-w-full">
+
+                                <div className="w-full flex justify-between items-center gap-5">
+                                    <p className={`capitalize ${singleTask?.taskPriority === "urgent" ? "urgent-priority" : singleTask?.taskPriority === "important" ? "important-priority" : "normal-priority"}`}>{singleTask?.taskPriority}</p>
+
+                                    <div className="flex justify-end items-center gap-2 text-lightwhite">
+                                        <button onClick={() => getUpdateData(singleTask?._id)}><MdModeEditOutline /></button>
+                                        <button onClick={() => handleDelete(singleTask?._id)}><MdDelete /></button>
+                                    </div>
+                                </div>
+
+                                <h3 className="text-[16px] font-medium text-black">{singleTask?.title}</h3>
+
+                                <p className="text-[14px] text-lightblack">{singleTask?.description}</p>
+
+                                <p className="text-[14px] text-lightblack">Deadline: {singleTask?.taskDeadlineDate}</p>
+
+                                {
+                                    singleTask?.taskDeadlineDate === todayDate ? <p className="deadline-notification">You have a deadline today</p> : ""
+
+                                }
+
+                                <div className="w-full flex justify-start items-center gap-3">
+
+                                    <button className="button-complete"
+                                        onClick={() => updateTaskStatus(singleTask?._id, "completed")}
+                                    >
+                                        Mark Complete
+                                    </button>
+                                </div>
+
+                            </div>
+                        )
+                    }
+                </div>
+
+                {/* completed tasks */}
+                <div className="flex flex-col justify-start items-start gap-7 bg-[#e2ffed] py-4 px-3 rounded-[5px]">
+                    <h3 className="font-semibold text-[#189418] text-xl">Completed</h3>
+                    {
+                        completedTasks.map((singleTask, index) =>
+                            <div key={index}
+                                className="bg-white py-4 px-3 rounded flex flex-col justify-start items-start gap-4 min-w-full">
+
+                                <div className="w-full flex justify-between items-center gap-5">
+                                    <p className={`capitalize ${singleTask?.taskPriority === "urgent" ? "urgent-priority" : singleTask?.taskPriority === "important" ? "important-priority" : "normal-priority"}`}>{singleTask?.taskPriority}</p>
+
+                                    <div className="flex justify-end items-center gap-2 text-lightwhite">
+                                        <button onClick={() => getUpdateData(singleTask?._id)}><MdModeEditOutline /></button>
+                                        <button onClick={() => handleDelete(singleTask?._id)}><MdDelete /></button>
+                                    </div>
+                                </div>
+
+                                <h3 className="text-[16px] font-medium text-black">{singleTask?.title}</h3>
+
+                                <p className="text-[14px] text-lightblack">{singleTask?.description}</p>
+
+                                <p className="text-[14px] text-lightblack">Deadline: {singleTask?.taskDeadlineDate}</p>
+
+                            </div>
+                        )
+                    }
+                </div>
+            </div>
+
+
 
 
             {/* modal to add tasks */}
@@ -282,98 +428,6 @@ const Alltasks = () => {
             </dialog>
 
 
-            {/* tasks showing table */}
-            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-[50px]">
-
-
-                {/* to do tasks */}
-                <div className="flex flex-col justify-start items-start gap-3 bg-[#ebebeb] py-4 px-3 rounded-[5px]">
-                    <h3 className="font-semibold text-lightblack text-xl">To-do</h3>
-                    {
-                        toDoTasks.map((singleTask, index) =>
-                            <div
-                            key={index}
-                                className="bg-white py-4 px-3 rounded flex flex-col justify-start items-start gap-4 min-w-full z-[99]">
-
-                                <div className="w-full flex justify-between items-center gap-5">
-                                    <p className={`capitalize ${singleTask?.taskPriority === "urgent" ? "urgent-priority" : singleTask?.taskPriority === "important" ? "important-priority" : "normal-priority"}`}>{singleTask?.taskPriority}</p>
-
-                                    <div className="flex justify-end items-center gap-2 text-lightwhite">
-                                        <button onClick={() => getUpdateData(singleTask?._id)}><MdModeEditOutline /></button>
-                                        <button onClick={() => handleDelete(singleTask?._id)}><MdDelete /></button>
-                                    </div>
-                                </div>
-
-                                <h3 className="text-[16px] font-medium text-black">{singleTask?.title}</h3>
-
-                                <p className="text-[14px] text-lightblack">{singleTask?.description}</p>
-
-                                <p className="text-[14px] text-lightblack">Deadline: {singleTask?.taskDeadlineDate}</p>
-
-                            </div>
-                        )
-                    }
-                </div>
-
-                {/* in progress tasks */}
-                <div className="flex flex-col justify-start items-start gap-3 bg-[#d8efff] py-4 px-3 rounded-[5px]">
-                    <h3 className="font-semibold text-[#4ea0ff] text-xl">In progress</h3>
-                    {
-                        inProgressTasks.map((singleTask, index) =>
-                            <div key={index}
-                                className="bg-white py-4 px-3 rounded flex flex-col justify-start items-start gap-4 min-w-full">
-
-                                <div className="w-full flex justify-between items-center gap-5">
-                                    <p className={`capitalize ${singleTask?.taskPriority === "urgent" ? "urgent-priority" : singleTask?.taskPriority === "important" ? "important-priority" : "normal-priority"}`}>{singleTask?.taskPriority}</p>
-
-                                    <div className="flex justify-end items-center gap-2 text-lightwhite">
-                                        <button onClick={() => getUpdateData(singleTask?._id)}><MdModeEditOutline /></button>
-                                        <button onClick={() => handleDelete(singleTask?._id)}><MdDelete /></button>
-                                    </div>
-                                </div>
-
-                                <h3 className="text-[16px] font-medium text-black">{singleTask?.title}</h3>
-
-                                <p className="text-[14px] text-lightblack">{singleTask?.description}</p>
-
-                                <p className="text-[14px] text-lightblack">Deadline: {singleTask?.taskDeadlineDate}</p>
-
-                            </div>
-                        )
-                    }
-                </div>
-
-                {/* completed tasks */}
-                <div className="flex flex-col justify-start items-start gap-3 bg-[#e2ffed] py-4 px-3 rounded-[5px]">
-                    <h3 className="font-semibold text-[#189418] text-xl">Completed</h3>
-                    {
-                        completedTasks.map((singleTask, index) =>
-                            <div key={index}
-                                className="bg-white py-4 px-3 rounded flex flex-col justify-start items-start gap-4 min-w-full">
-
-                                <div className="w-full flex justify-between items-center gap-5">
-                                    <p className={`capitalize ${singleTask?.taskPriority === "urgent" ? "urgent-priority" : singleTask?.taskPriority === "important" ? "important-priority" : "normal-priority"}`}>{singleTask?.taskPriority}</p>
-
-                                    <div className="flex justify-end items-center gap-2 text-lightwhite">
-                                        <button onClick={() => getUpdateData(singleTask?._id)}><MdModeEditOutline /></button>
-                                        <button onClick={() => handleDelete(singleTask?._id)}><MdDelete /></button>
-                                    </div>
-                                </div>
-
-                                <h3 className="text-[16px] font-medium text-black">{singleTask?.title}</h3>
-
-                                <p className="text-[14px] text-lightblack">{singleTask?.description}</p>
-
-                                <p className="text-[14px] text-lightblack">Deadline: {singleTask?.taskDeadlineDate}</p>
-
-                            </div>
-                        )
-                    }
-                </div>
-            </div>
-
-
-
 
             {/* modal to update tasks */}
             <dialog id="taskUpdatingModal" className="modal modal-bottom sm:modal-middle">
@@ -382,18 +436,17 @@ const Alltasks = () => {
                     <div className="modal-action w-full">
 
                         {/* task updating form */}
-                        <form onSubmit={handleSubmit(onUpdateSubmit)} className="w-full h-auto flex flex-col justify-center items-start gap-5">
-
+                        <form onSubmit={handleTaskUpdate} ref={updatingForm} className="w-full h-auto flex flex-col justify-center items-start gap-5">
 
                             {/* title input */}
                             <div className="w-full flex flex-col justify-center items-start md:items-center lg:items-start">
                                 <label className="label">
                                     <span className="label-text font-body text-lightblack font-semibold">Task title<span className="text-[red]">*</span></span>
                                 </label>
-                                <input type="text" className="w-full bg-[#ffffff00] border-lightwhite border-[1px] px-5 py-2 rounded-[5px] focus:outline-none focus:border-third font-body text-black focus:bg-white"
-                                    placeholder={singleTask?.title}
-                                    {...register("title", { required: true })} />
-                                {errors.title && <span className="font-main text-[14px] text-[#a12121] font-medium">This field is required</span>}
+                                <input required type="text" name="title" id="title"
+                                    defaultValue={singleTask?.title}
+                                    className="w-full bg-[#ffffff00] border-lightwhite border-[1px] px-5 py-2 rounded-[5px] focus:outline-none focus:border-third font-body text-black focus:bg-white"
+                                />
                             </div>
 
 
@@ -402,9 +455,9 @@ const Alltasks = () => {
                                 <label className="label">
                                     <span className="label-text font-body text-lightblack font-semibold">Task description<span className="text-[red]">*</span></span>
                                 </label>
-                                <textarea className="w-full bg-[#ffffff00] border-lightwhite border-[1px] px-5 py-2 rounded-[5px] focus:outline-none focus:border-third font-body text-black focus:bg-white"
-                                    placeholder={singleTask?.description}{...register("description", { required: true })} />
-                                {errors.description && <span className="font-main text-[14px] text-[#a12121] font-medium">This field is required</span>}
+                                <textarea required defaultValue={singleTask?.description}
+                                    name="description" id="description"
+                                    className="w-full bg-[#ffffff00] border-lightwhite border-[1px] px-5 py-2 rounded-[5px] focus:outline-none focus:border-third font-body text-black focus:bg-white" />
                             </div>
 
 
@@ -414,15 +467,13 @@ const Alltasks = () => {
                                 <label className="label">
                                     <span className="label-text font-body text-lightblack font-semibold">Task priority<span className="text-[red]">*</span></span>
                                 </label>
-                                <select className="w-full bg-[#ffffff00] border-lightwhite border-[1px] px-5 py-2 rounded-[5px] focus:outline-none focus:border-third font-body text-lightblack focus:bg-white"
-                                    placeholder={singleTask?.taskPriority}
-                                    {...register("taskPriority", { required: true })}>
+                                <select required defaultValue={singleTask?.taskPriority} name="taskPriority" id="taskPriority"
+                                    className="w-full bg-[#ffffff00] border-lightwhite border-[1px] px-5 py-2 rounded-[5px] focus:outline-none focus:border-third font-body text-lightblack focus:bg-white">
                                     <option disabled value="Select task priority">Select task priority</option>
                                     <option value="normal">Normal</option>
                                     <option value="important">Important</option>
                                     <option value="urgent">Urgent</option>
                                 </select>
-                                {errors.taskPriority && <span className="font-main text-[14px] text-[#a12121] font-medium">This field is required</span>}
                             </div>
 
 
@@ -431,9 +482,8 @@ const Alltasks = () => {
                                 <label className="label">
                                     <span className="label-text font-body text-lightblack font-semibold">Deadline<span className="text-[red]">*</span></span>
                                 </label>
-                                <input type="date" min={todayDate} {...register("deadline", { required: true })}
+                                <input required type="date" min={todayDate} name="taskDeadlineDate" id="taskDeadlineDate"
                                     className="w-full bg-[#ffffff00] border-lightwhite border-[1px] px-5 py-2 rounded-[5px] focus:outline-none focus:border-third font-body text-lightblack focus:bg-white" />
-                                {errors.deadline && <span className="font-body text-[14px] text-[#a12121] font-medium">This field is required</span>}
                             </div>
 
 
@@ -450,6 +500,9 @@ const Alltasks = () => {
 
                 </div>
             </dialog>
+
+
+
         </div>
     );
 };

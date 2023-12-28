@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { TypeAnimation } from 'react-type-animation';
 import SectionTile from '../../Shared/SectionTitle/SectionTile';
 import { Link } from 'react-router-dom';
+import { useInView } from 'framer-motion';
 
 
 
@@ -20,7 +21,21 @@ const Banner = () => {
     const [textColor, setTextColor] = useState('#864fff');
 
 
+    // famer motion hook
+    const animate1 = useRef(null);
+    const isInView1 = useInView(animate1);
+    const animate2 = useRef(null);
+    const isInView2 = useInView(animate2);
+    const animate3 = useRef(null);
+    const isInView3 = useInView(animate3);
+    const animate4 = useRef(null);
+    const isInView4 = useInView(animate4);
+    const animate5 = useRef(null);
+    const isInView5 = useInView(animate5);
+    const animate6 = useRef(null);
+    const isInView6 = useInView(animate6);
 
+    
 
     return (
         <div className='py-[50px] lg:py-[0px] overflow-x-hidden'
@@ -40,8 +55,22 @@ const Banner = () => {
                         style={{
                             color: textColor
                         }}>
-                        <h2 className='text-black leading-[50px] font-main text-[65px] md:text-[70px] lg:text-[80px] uppercase font-extrabold'>EverPlan</h2>
-                        <div className='w-full h-[80px]'>
+                        <h2 className='text-black leading-[50px] font-main text-[65px] md:text-[70px] lg:text-[80px] uppercase font-extrabold'
+                            ref={animate1}
+                            style={{
+                                transform: isInView1 ? "none" : "translateY(-70px)",
+                                opacity: isInView1 ? "1" : "0",
+                                transition: "all 1.5s",
+                            }}
+                        >EverPlan</h2>
+                        <div className='w-full h-[80px]'
+                            ref={animate1}
+                            style={{
+                                transform: isInView1 ? "none" : "translateX(-70px)",
+                                opacity: isInView1 ? "1" : "0",
+                                transition: "all 1.5s",
+                            }}
+                        >
                             <TypeAnimation className='font-main leading-[80px] text-[65px] md:text-[70px] lg:text-[80px] uppercase font-extrabold'
                                 sequence={[
                                     'Focus',
@@ -65,12 +94,26 @@ const Banner = () => {
                                 deletionSpeed={150}
                             />
                         </div>
-                        <Link to="/dashboard"><button className='primary-button mt-5'>{'Let\'s'} Explore</button></Link>
+                        <Link to="/dashboard"
+                            ref={animate1}
+                            style={{
+                                transform: isInView1 ? "none" : "translateY(100px)",
+                                opacity: isInView1 ? "1" : "0",
+                                transition: "all 1.5s",
+                            }}
+                        ><button className='primary-button mt-5'>{'Let\'s'} Explore</button></Link>
                     </div>
                 </div>
 
                 {/* right container */}
-                <div className='w-full lg:w-1/2'>
+                <div className='w-full lg:w-1/2'
+                    ref={animate1}
+                    style={{
+                        transform: isInView1 ? "none" : "scale(0)",
+                        opacity: isInView1 ? "1" : "0",
+                        transition: "all 1.7s",
+                    }}
+                >
                     <img src={bannerBg} alt="Banner image" />
                 </div>
 
@@ -92,29 +135,64 @@ const Banner = () => {
                 <div className='w-full flex flex-col lg:flex-row justify-center lg:justify-between items-center'>
 
                     {/* fetures left */}
-                    <div className='w-full lg:w-1/2 flex justify-center items-center'>
+                    <div
+                        ref={animate2}
+                        style={{
+                            transform: isInView2 ? "none" : "translateX(-70px)",
+                            opacity: isInView2 ? "1" : "0",
+                            transition: "all 1.5s",
+                        }}
+                        className='w-full lg:w-1/2 flex justify-center items-center'>
                         <img src={featuresImg} alt="" />
                     </div>
 
                     {/* features right*/}
                     <div className='font-main grid grid-cols-1 md:grid-cols-2 gap-[20px] lg:gap-[40px] mt-10 w-full lg:w-1/2'>
 
-                        <div className='bg-white p-10 rounded-[20px] text-center flex flex-col justify-center items-center gap-3 shadow-[0_0_70px_#cbcbcb]'>
+                        <div
+                            ref={animate3}
+                            style={{
+                                transform: isInView3 ? "none" : "translateY(-70px)",
+                                opacity: isInView3 ? "1" : "0",
+                                transition: "all 1.2s",
+                            }}
+                            className='bg-white p-10 rounded-[20px] text-center flex flex-col justify-center items-center gap-3 shadow-[0_0_70px_#cbcbcb]'>
                             <h3 className='text-3xl font-bold'>Intutive User Interface</h3>
                             <p className='text-center text-lightblack'>Enjoy a user-friendly interface that makes task management easy and accessible for users of all levels.</p>
                         </div>
 
-                        <div className='bg-white p-10 rounded-[20px] text-center flex flex-col justify-center items-center gap-3 shadow-[0_0_70px_#cbcbcb]'>
+                        <div
+                            ref={animate4}
+                            style={{
+                                transform: isInView4 ? "none" : "translateY(-70px)",
+                                opacity: isInView4 ? "1" : "0",
+                                transition: "all 1.4s",
+                            }}
+                            className='bg-white p-10 rounded-[20px] text-center flex flex-col justify-center items-center gap-3 shadow-[0_0_70px_#cbcbcb]'>
                             <h3 className='text-3xl font-bold'>Effortless Task Creation</h3>
                             <p className='text-center text-lightblack'>Quickly create and organize tasks with a streamlined and efficient task creation process.</p>
                         </div>
 
-                        <div className='bg-white p-10 rounded-[20px] text-center flex flex-col justify-center items-center gap-3 shadow-[0_0_70px_#cbcbcb]'>
+                        <div
+                            ref={animate5}
+                            style={{
+                                transform: isInView5 ? "none" : "translateY(-70px)",
+                                opacity: isInView5 ? "1" : "0",
+                                transition: "all 1.6s",
+                            }}
+                            className='bg-white p-10 rounded-[20px] text-center flex flex-col justify-center items-center gap-3 shadow-[0_0_70px_#cbcbcb]'>
                             <h3 className='text-3xl font-bold'>Data Security</h3>
                             <p className='text-center text-lightblack'>Rest easy knowing that your task data is secure, with robust security measures in place to protect sensitive information.</p>
                         </div>
 
-                        <div className='bg-white p-10 rounded-[20px] text-center flex flex-col justify-center items-center gap-3 shadow-[0_0_70px_#cbcbcb]'>
+                        <div
+                            ref={animate6}
+                            style={{
+                                transform: isInView6 ? "none" : "translateY(-70px)",
+                                opacity: isInView6 ? "1" : "0",
+                                transition: "all 1.8s",
+                            }}
+                            className='bg-white p-10 rounded-[20px] text-center flex flex-col justify-center items-center gap-3 shadow-[0_0_70px_#cbcbcb]'>
                             <h3 className='text-3xl font-bold'>Continuous Updates</h3>
                             <p className='text-center text-lightblack'>Stay current with continuous updates for a cutting-edge task management experience.</p>
                         </div>

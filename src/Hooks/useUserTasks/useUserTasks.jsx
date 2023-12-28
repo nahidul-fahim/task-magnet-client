@@ -10,7 +10,7 @@ const useUserTasks = () => {
 
     // get current user and email
     const { currentUser } = useAuthProvider();
-    const email = currentUser?.email;
+    const email = currentUser.email;
 
     const { isPending: alltasksPending, data: allTasks, refetch: allTasksRefetch } = useQuery({
         queryKey: ["all-tasks", email],
